@@ -29,7 +29,11 @@ body {
 }
 
 .dot {
-  stroke: #000;
+  fill: rgba(0,0,0,0.2);
+}
+
+.dot.highlighted{
+	fill: rgba(0,0,0,1);
 }
 
 .tooltip {
@@ -49,6 +53,8 @@ var margin = {top: 20, right: 20, bottom: 40, left: 70},
     width = 800 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 
+
+
 // Column names
 var col = {
 	"selective": "ACT Composite 25th percentile score (bin)",
@@ -58,15 +64,17 @@ var col = {
 	"endowment": "Total endowment (log)"
 }
 
+
+
 // Data mappings
-var xValue = function(d) { return d[col["enrollment"]];},
-    xScale = d3.scaleLinear().range([0, width]),
+var xValue = function(d) { return +d[col["enrollment"]];},
+    xScale = d3.scaleLinear().domain([0,36]).range([0, width]),
     xMap = function(d) { return xScale(xValue(d));},
     xAxis = d3.axisBottom(xScale)
-    	.tickFormat(function(d){return d*100});
+    	.tickFormat(function(d){return d});
 
-var yValue = function(d) { return d[col["endowment"]];},
-    yScale = d3.scaleLog().domain([1e3, 1e6+6e5]).range([height, 0]), // Log scale
+var yValue = function(d) { return +d[col["endowment"]];},
+    yScale = d3.scaleLog().domain([1e3, 3e6]).range([height, 0]), // Log scale
     yMap = function(d) { return yScale(yValue(d));},
     yAxis = d3.axisLeft(yScale)
     	.ticks(4)
@@ -78,24 +86,25 @@ var yValue = function(d) { return d[col["endowment"]];},
 
 var cValue = function(d) { return d[col["selective"]];}
 
-// Create outside containers
+
+
+// SVG container
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+// Tooltips container
 var tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
-// Load and use data
+
+
+// Load and draw data
 d3.csv("./asian-enrollment.csv").then(function(data) {
 
-	data.forEach(function(d) {
-		d[col["enrollment"]] = +d[col["enrollment"]];
-		d[col["endowment"]] = +d[col["endowment"]];
-	});
 
 	// Create axis containers
 	var bottom = svg.append("g")
@@ -107,8 +116,10 @@ d3.csv("./asian-enrollment.csv").then(function(data) {
       .attr("class", "y axis")
       .call(yAxis)
 
+
     // Create axis labels
     var bottomText = svg.append("g")
+
     bottomText.append("text")
 	  .attr("class", "axis label x")
 	  .attr("transform", 
@@ -128,6 +139,38 @@ d3.csv("./asian-enrollment.csv").then(function(data) {
 	    .attr("x",0 - (height / 2))
 	    .attr("dy", "1em")
 	    .text(col["endowment"])
+
+
+	// Draw circles
+	var circles = svg.selectAll(".dot")
+			.data(data)
+	    .enter().append("circle")
+	    .filter(function(d) { return d[col["region"]] == "Atlantic & Pacific Ocean States" })
+		    .attr("class", function(d) { 
+		      	if (d[col["selective"]] == "Selective") {
+					return "dot highlighted"
+		      	} else {
+		      		return "dot"
+		      	}
+		    })
+		    .attr("r", 6)
+		    .attr("cx", xMap)
+		    .attr("cy", yMap)
+		    
+	circles.on("mouseover", function(d) {
+	          tooltip.transition()
+	               .duration(200)
+	               .style("opacity", .9);
+	          tooltip.html(d[col["name"]] + "<br/> (" + xValue(d) 
+		        + ", " + yValue(d) + ")")
+	               .style("left", (d3.event.pageX + 5) + "px")
+	               .style("top", (d3.event.pageY - 28) + "px");
+	      })
+	      .on("mouseout", function(d) {
+	          tooltip.transition()
+	               .duration(500)
+	               .style("opacity", 0);
+	      });
 })
 
 	</script>
