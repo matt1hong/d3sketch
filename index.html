@@ -154,12 +154,11 @@ d3.csv("./asian-enrollment.csv").then(function(data) {
 
 	// Filter
 	var regionFilter = function(d) { return d[col["region"]] == "Atlantic & Pacific Ocean States" };
-	var data = data.filter(regionFilter);
 
 
 	// Draw circles
 	var circles = svg.selectAll(".dot")
-			.data(data)
+			.data(data.filter(regionFilter))
 	    .enter().append("circle")
 		    .attr("class", function(d) { 
 		      	if (d[col["selective"]] == "Selective") {
