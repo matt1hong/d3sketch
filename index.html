@@ -53,9 +53,15 @@ var xValue = function(d) { return d[col["enrollment"]];},
     xAxis = d3.axisBottom(xScale);
 
 var yValue = function(d) { return d[col["endowment"]];},
-    yScale = d3.scaleLog().range([height, 0]), // Log scale
+    yScale = d3.scaleLog().domain([1e3, 1e6+6e5]).range([height, 0]), // Log scale
     yMap = function(d) { return yScale(yValue(d));},
-    yAxis = d3.axisLeft(yScale);
+    yAxis = d3.axisLeft(yScale)
+    	.ticks(4)
+    	.tickFormat(function(d){
+    		if (d.toString()[0] == 1) {
+    			return d3.format(",.0f")(d/1000) + "K"
+    		}
+    	})
 
 var cValue = function(d) { return d[col["selective"]];}
 
@@ -72,24 +78,37 @@ var tooltip = d3.select("body").append("div")
 
 // Load and use data
 d3.csv("./asian-enrollment.csv").then(function(data) {
-	
+
 	data.forEach(function(d) {
 		d[col["enrollment"]] = +d[col["enrollment"]];
 		d[col["endowment"]] = +d[col["endowment"]];
 	});
 
-	// Create x axis container
+	// Create axis containers
 	var bottom = svg.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
       .call(xAxis)  
 
+    var left =   svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+
+    // Create axis labels
 	svg.append("text")
 	  .attr("class", "label")
 	  .attr("transform", 
 	  	"translate(" + (width / 2) + " ," + (height+margin.bottom) + ")")
 	  .style("text-anchor", "middle")
 	  .text(col["enrollment"])	
+
+    svg.append("text")
+	    .attr("transform", "rotate(-90)")
+	    .attr("y", 0 - margin.left)
+	    .attr("x",0 - (height / 2))
+	    .attr("dy", "1em")
+	    .style("text-anchor", "middle")
+	    .text(col["endowment"]);
 })
 
 	</script>
