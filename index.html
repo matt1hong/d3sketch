@@ -120,21 +120,37 @@ render("black");
 function update(group) {
 	d3.csv("./" + group + "-enrollment.csv").then(function(data) {
 
+		var t = d3.transition()
+		      .duration(750)
+		      .ease(d3.easeLinear);
+
 		var stage = svg.selectAll(".dot")
 			.data(data);
 
 		stage.exit()
 			.remove();
 
-		stage.transition()
-			.duration(500)
+		stage.transition(t)
 			.attr("cx", xMap)
 			.attr("cy", yMap)
+
+		// Reference lines
+		var xMedian = d3.median(data, xValue)
+	    var xReference = svg.selectAll('.reference.x.line')
+			.transition(t)
+	        .attr('x1', xScale(xMedian))
+	        .attr('y1', yScale(yDomain[0]))
+	        .attr('x2', xScale(xMedian))
+	        .attr('y2', yScale(yDomain[1]))
 
 		var groupLabel = capitalize(group);
 		var stageText = svg.selectAll(".group")
 			.text(groupLabel)
 		var stageRefText = svg.selectAll(".reference.label.x")
+			.transition(t)
+			.attr("transform",
+				"translate(" + (xScale(xMedian) + 8) + 
+				"," + (height-6) + ")")
 			.text("Median " +groupLabel+ " enrollment")
 
 	})
