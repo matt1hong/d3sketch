@@ -16,12 +16,16 @@ body {
   shape-rendering: crispEdges;
 }
 
-.reference.y {
+.reference.y.line {
 	stroke: #000;
 	stroke-dasharray: 5;
 }
 
-.reference.x {
+.reference.y.label {
+	text-anchor: end;
+}
+
+.reference.x.line {
 	stroke: #000;
 }
 
@@ -116,8 +120,11 @@ var tooltip = d3.select("body").append("div")
 // Load and draw data
 d3.csv("./asian-enrollment.csv").then(function(data) {
 
+	// Filter
+	var regionFilter = function(d) { return d[col["region"]] == "Atlantic & Pacific Ocean States" };
 
-	// Create axis containers
+
+	// Create axes and ticks
 	var bottom = svg.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
@@ -126,34 +133,6 @@ d3.csv("./asian-enrollment.csv").then(function(data) {
     var left =   svg.append("g")
       .attr("class", "y axis")
       .call(yAxis)
-
-
-    // Create axis labels
-    var bottomText = svg.append("g")
-
-    bottomText.append("text")
-	  .attr("class", "axis label x")
-	  .attr("transform", 
-	  	"translate(" + (width / 2 - 60) + " ," + (height+margin.bottom) + ")")
-	  .text(col["enrollment"])
-	bottomText.append("text")
-	  .attr("id", "group")
-	  .attr("class", "axis label x")
-	  .attr("transform", 
-	  	"translate(" + (width / 2 + 120) + " ," + (height+margin.bottom) + ")")
-	  .text("who are Asian")
-
-    svg.append("text")
-    	.attr("class", "axis label y")
-	    .attr("transform", "rotate(-90)")
-	    .attr("y", 0 - margin.left)
-	    .attr("x",0 - (height / 2))
-	    .attr("dy", "1em")
-	    .text(col["endowment"])
-
-
-	// Filter
-	var regionFilter = function(d) { return d[col["region"]] == "Atlantic & Pacific Ocean States" };
 
 
 	// Draw circles
@@ -194,13 +173,52 @@ d3.csv("./asian-enrollment.csv").then(function(data) {
         .attr('y1', yScale(yDomain[0]))
         .attr('x2', xScale(xMedian))
         .attr('y2', yScale(yDomain[1]))
-        .attr('class', 'reference x');
+        .attr('class', 'reference x line');
     var yReference = svg.append('line')
         .attr('x1', xScale(xDomain[0]))
         .attr('y1', yScale(84000))
         .attr('x2', xScale(xDomain[1]))
         .attr('y2', yScale(84000))
-        .attr('class', 'reference y');
+        .attr('class', 'reference y line');
+
+
+    // Create axis labels
+    // x axis
+    var bottomText = svg.append("g")
+    bottomText.append("text")
+	  .attr("class", "axis label x")
+	  .attr("transform", 
+	  	"translate(" + (width / 2 - 60) + " ," + (height+margin.bottom) + ")")
+	  .text(col["enrollment"])
+	bottomText.append("text")
+	  .attr("id", "group")
+	  .attr("class", "axis label x")
+	  .attr("transform", 
+	  	"translate(" + (width / 2 + 120) + " ," + (height+margin.bottom) + ")")
+	  .text("who are Asian")
+
+	var xReferenceText = svg.append("text")
+		.attr("class", "reference label x")
+		.attr("transform",
+			"translate(" + (xScale(xMedian) + 8) + 
+			"," + (height-6) + ")")
+		.text("Median Asian enrollment")
+
+	// y axis
+    svg.append("text")
+    	.attr("class", "axis label y")
+	    .attr("transform", "rotate(-90)")
+	    .attr("y", 0 - margin.left)
+	    .attr("x",0 - (height / 2))
+	    .attr("dy", "1em")
+	    .text(col["endowment"])
+
+	var yReferenceText = svg.append("text")
+		.attr("class", "reference label y")
+		.attr("transform",
+			"translate(" + (width) + 
+			"," + (yScale(84000) - 6) + ")")
+		.text("↑ Richer")
 })
 
 	</script>
