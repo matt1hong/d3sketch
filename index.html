@@ -67,7 +67,6 @@ var margin = {top: 20, right: 20, bottom: 40, left: 70},
     height = 600 - margin.top - margin.bottom;
 
 
-
 // Column names
 var col = {
 	"selective": "ACT Composite 25th percentile score (bin)",
@@ -76,7 +75,6 @@ var col = {
 	"enrollment": "Percent of total enrollment",
 	"endowment": "Total endowment (log)"
 }
-
 
 
 // Data mappings
@@ -102,7 +100,6 @@ var yValue = function(d) { return +d[col["endowment"]];},
 var cValue = function(d) { return d[col["selective"]];}
 
 
-
 // SVG container
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -118,108 +115,134 @@ var tooltip = d3.select("body").append("div")
 
 
 // Load and draw data
-d3.csv("./asian-enrollment.csv").then(function(data) {
+render("black");
 
-	// Filter
-	var regionFilter = function(d) { return d[col["region"]] == "Atlantic & Pacific Ocean States" };
+function update(group) {
+	d3.csv("./" + group + "-enrollment.csv").then(function(data) {
 
+		var stage = svg.selectAll(".dot")
+			.data(data);
 
-	// Create axes and ticks
-	var bottom = svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis)  
+		stage.exit()
+			.remove();
 
-    var left =   svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
+		stage.transition()
+			.duration(500)
+			.attr("cx", xMap)
+			.attr("cy", yMap)
 
+	})
+}
 
-	// Draw circles
-	var circles = svg.selectAll(".dot")
-			.data(data.filter(regionFilter))
-	    .enter().append("circle")
-		    .attr("class", function(d) { 
-		      	if (d[col["selective"]] == "Selective") {
-					return "dot highlighted"
-		      	} else {
-		      		return "dot"
-		      	}
-		    })
-		    .attr("r", 6)
-		    .attr("cx", xMap)
-		    .attr("cy", yMap)
+function render(group) {
+	d3.csv("./" + group + "-enrollment.csv").then(function(data) {
 
-	circles.on("mouseover", function(d) {
-	          tooltip.transition()
-	               .duration(200)
-	               .style("opacity", .9);
-	          tooltip.html(d[col["name"]] + "<br/> (" + xValue(d) 
-		        + ", " + yValue(d) + ")")
-	               .style("left", (d3.event.pageX + 5) + "px")
-	               .style("top", (d3.event.pageY - 28) + "px");
-	      })
-	      .on("mouseout", function(d) {
-	          tooltip.transition()
-	               .duration(500)
-	               .style("opacity", 0);
-	      });
+		// Filter
+		var regionFilter = function(d) { return d[col["region"]] == "Atlantic & Pacific Ocean States" };
 
 
-	// Draw reference lines
-	var xMedian = d3.median(data, xValue)
-    var xReference = svg.append('line')
-        .attr('x1', xScale(xMedian))
-        .attr('y1', yScale(yDomain[0]))
-        .attr('x2', xScale(xMedian))
-        .attr('y2', yScale(yDomain[1]))
-        .attr('class', 'reference x line');
-    var yReference = svg.append('line')
-        .attr('x1', xScale(xDomain[0]))
-        .attr('y1', yScale(84000))
-        .attr('x2', xScale(xDomain[1]))
-        .attr('y2', yScale(84000))
-        .attr('class', 'reference y line');
+		// Create axes and ticks
+		var bottom = svg.append("g")
+	      .attr("class", "x axis")
+	      .attr("transform", "translate(0," + height + ")")
+	      .call(xAxis)  
+
+	    var left =   svg.append("g")
+	      .attr("class", "y axis")
+	      .call(yAxis)
 
 
-    // Create axis labels
-    // x axis
-    var bottomText = svg.append("g")
-    bottomText.append("text")
-	  .attr("class", "axis label x")
-	  .attr("transform", 
-	  	"translate(" + (width / 2 - 60) + " ," + (height+margin.bottom) + ")")
-	  .text(col["enrollment"])
-	bottomText.append("text")
-	  .attr("id", "group")
-	  .attr("class", "axis label x")
-	  .attr("transform", 
-	  	"translate(" + (width / 2 + 120) + " ," + (height+margin.bottom) + ")")
-	  .text("who are Asian")
+		// Draw circles
+		var circles = svg.selectAll(".dot")
+				.data(data.filter(regionFilter))
+		    .enter().append("circle")
+			    .attr("class", function(d) { 
+			      	if (d[col["selective"]] == "Selective") {
+						return "dot highlighted"
+			      	} else {
+			      		return "dot"
+			      	}
+			    })
+			    .attr("r", 6)
+			    .attr("cx", xMap)
+			    .attr("cy", yMap)
 
-	var xReferenceText = svg.append("text")
-		.attr("class", "reference label x")
-		.attr("transform",
-			"translate(" + (xScale(xMedian) + 8) + 
-			"," + (height-6) + ")")
-		.text("Median Asian enrollment")
+		circles.on("mouseover", function(d) {
+		          tooltip.transition()
+		               .duration(200)
+		               .style("opacity", .9);
+		          tooltip.html(d[col["name"]] + "<br/> (" + xValue(d) 
+			        + ", " + yValue(d) + ")")
+		               .style("left", (d3.event.pageX + 5) + "px")
+		               .style("top", (d3.event.pageY - 28) + "px");
+		      })
+		      .on("mouseout", function(d) {
+		          tooltip.transition()
+		               .duration(500)
+		               .style("opacity", 0);
+		      });
 
-	// y axis
-    svg.append("text")
-    	.attr("class", "axis label y")
-	    .attr("transform", "rotate(-90)")
-	    .attr("y", 0 - margin.left)
-	    .attr("x",0 - (height / 2))
-	    .attr("dy", "1em")
-	    .text(col["endowment"])
 
-	var yReferenceText = svg.append("text")
-		.attr("class", "reference label y")
-		.attr("transform",
-			"translate(" + (width) + 
-			"," + (yScale(84000) - 6) + ")")
-		.text("↑ Richer")
-})
+		// Draw reference lines
+		var xMedian = d3.median(data, xValue)
+	    var xReference = svg.append('line')
+	        .attr('x1', xScale(xMedian))
+	        .attr('y1', yScale(yDomain[0]))
+	        .attr('x2', xScale(xMedian))
+	        .attr('y2', yScale(yDomain[1]))
+	        .attr('class', 'reference x line');
+	    var yReference = svg.append('line')
+	        .attr('x1', xScale(xDomain[0]))
+	        .attr('y1', yScale(84000))
+	        .attr('x2', xScale(xDomain[1]))
+	        .attr('y2', yScale(84000))
+	        .attr('class', 'reference y line');
+
+
+	    // Create axis labels
+	    var groupLabel = capitalize(group);
+	    // x axis
+	    var bottomText = svg.append("g")
+	    bottomText.append("text")
+		  .attr("class", "axis label x")
+		  .attr("transform", 
+		  	"translate(" + (width / 2 - 60) + " ," + (height+margin.bottom) + ")")
+		  .text(col["enrollment"])
+		bottomText.append("text")
+		  .attr("id", "group")
+		  .attr("class", "axis label x")
+		  .attr("transform", 
+		  	"translate(" + (width / 2 + 120) + " ," + (height+margin.bottom) + ")")
+		  .text("who are " + groupLabel)
+
+		var xReferenceText = svg.append("text")
+			.attr("class", "reference label x")
+			.attr("transform",
+				"translate(" + (xScale(xMedian) + 8) + 
+				"," + (height-6) + ")")
+			.text("Median " +groupLabel+ " enrollment")
+
+		// y axis
+	    svg.append("text")
+	    	.attr("class", "axis label y")
+		    .attr("transform", "rotate(-90)")
+		    .attr("y", 0 - margin.left)
+		    .attr("x",0 - (height / 2))
+		    .attr("dy", "1em")
+		    .text(col["endowment"])
+
+		var yReferenceText = svg.append("text")
+			.attr("class", "reference label y")
+			.attr("transform",
+				"translate(" + (width) + 
+				"," + (yScale(84000) - 6) + ")")
+			.text("↑ Richer")
+	})
+}
+
+function capitalize(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 	</script>
 </html>
