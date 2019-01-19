@@ -16,6 +16,15 @@ body {
   shape-rendering: crispEdges;
 }
 
+.reference.y {
+	stroke: #000;
+	stroke-dasharray: 5;
+}
+
+.reference.x {
+	stroke: #000;
+}
+
 .axis.label {
 	text-anchor: middle;
 	font-size: 18px;
@@ -68,13 +77,15 @@ var col = {
 
 // Data mappings
 var xValue = function(d) { return +d[col["enrollment"]];},
-    xScale = d3.scaleLinear().domain([0,36]).range([0, width]),
+	xDomain = [0,36],
+    xScale = d3.scaleLinear().domain(xDomain).range([0, width]),
     xMap = function(d) { return xScale(xValue(d));},
     xAxis = d3.axisBottom(xScale)
     	.tickFormat(function(d){return d});
 
 var yValue = function(d) { return +d[col["endowment"]];},
-    yScale = d3.scaleLog().domain([1e3, 3e6]).range([height, 0]), // Log scale
+	yDomain = [1e3, 3e6],
+    yScale = d3.scaleLog().domain(yDomain).range([height, 0]), // Log scale
     yMap = function(d) { return yScale(yValue(d));},
     yAxis = d3.axisLeft(yScale)
     	.ticks(4)
@@ -141,11 +152,15 @@ d3.csv("./asian-enrollment.csv").then(function(data) {
 	    .text(col["endowment"])
 
 
+	// Filter
+	var regionFilter = function(d) { return d[col["region"]] == "Atlantic & Pacific Ocean States" };
+	var data = data.filter(regionFilter);
+
+
 	// Draw circles
 	var circles = svg.selectAll(".dot")
 			.data(data)
 	    .enter().append("circle")
-	    .filter(function(d) { return d[col["region"]] == "Atlantic & Pacific Ocean States" })
 		    .attr("class", function(d) { 
 		      	if (d[col["selective"]] == "Selective") {
 					return "dot highlighted"
@@ -156,7 +171,7 @@ d3.csv("./asian-enrollment.csv").then(function(data) {
 		    .attr("r", 6)
 		    .attr("cx", xMap)
 		    .attr("cy", yMap)
-		    
+
 	circles.on("mouseover", function(d) {
 	          tooltip.transition()
 	               .duration(200)
@@ -171,6 +186,22 @@ d3.csv("./asian-enrollment.csv").then(function(data) {
 	               .duration(500)
 	               .style("opacity", 0);
 	      });
+
+
+	// Draw reference lines
+	var xMedian = d3.median(data, xValue)
+    var xReference = svg.append('line')
+        .attr('x1', xScale(xMedian))
+        .attr('y1', yScale(yDomain[0]))
+        .attr('x2', xScale(xMedian))
+        .attr('y2', yScale(yDomain[1]))
+        .attr('class', 'reference x');
+    var yReference = svg.append('line')
+        .attr('x1', xScale(xDomain[0]))
+        .attr('y1', yScale(84000))
+        .attr('x2', xScale(xDomain[1]))
+        .attr('y2', yScale(84000))
+        .attr('class', 'reference y');
 })
 
 	</script>
