@@ -5,10 +5,53 @@
 	<title>D3 sketch</title>
 	<script src="https://d3js.org/d3.v5.min.js"></script>
 	<script>
+// Dimensions
 var margin = {top: 20, right: 20, bottom: 30, left: 40},
     width = 1200 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 
+// Column names
+var col = {
+	"selective": "ACT Composite 25th percentile score (bin)",
+	"region": "Geographic region (group)",
+	"name": "Name",
+	"enrollment": "Percent of total enrollment",
+	"endowment": "Total endowment (log)"
+}
+
+// Data mappings
+var xValue = function(d) { return d[col["enrollment"]];},
+    xScale = d3.scale.linear().range([0, width]),
+    xMap = function(d) { return xScale(xValue(d));},
+    xAxis = d3.svg.axis().scale(xScale).orient("bottom");
+
+var yValue = function(d) { return d[col["endowment"]];},
+    yScale = d3.scale.log().base(Math.E).range([height, 0]),
+    yMap = function(d) { return yScale(yValue(d));},
+    yAxis = d3.svg.axis().scale(yScale).orient("left");
+
+var cValue = function(d) { return d[col["selective"]];},
+
+// Create containers
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var tooltip = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
+// Load and use data
+d3.csv("cereal.csv", function(error, data) {
+
+  data.forEach(function(d) {
+    d[col["enrollment"]] = +d[col["enrollment"]];
+    d[col["endowment"]] = +d[col["endowment"]];
+  });
+
+}
 
 	</script>
 	<style>
@@ -16,6 +59,6 @@ var margin = {top: 20, right: 20, bottom: 30, left: 40},
 	</style>
 </head>
 <body>
-	<svg width=1200 height=600 id="vis"></svg>
+
 </body>
 </html>
