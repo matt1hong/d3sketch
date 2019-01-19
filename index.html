@@ -131,6 +131,12 @@ function update(group) {
 			.attr("cx", xMap)
 			.attr("cy", yMap)
 
+		var groupLabel = capitalize(group);
+		var stageText = svg.selectAll(".group")
+			.text(groupLabel)
+		var stageRefText = svg.selectAll(".reference.label.x")
+			.text("Median " +groupLabel+ " enrollment")
+
 	})
 }
 
@@ -203,20 +209,19 @@ function render(group) {
 	    var groupLabel = capitalize(group);
 	    // x axis
 	    var bottomText = svg.append("g")
+	      .attr("class", "axis label x")
+		  .attr("transform", 
+		  	"translate(" + (width / 2) + " ," + (height+margin.bottom) + ")")
 	    bottomText.append("text")
-		  .attr("class", "axis label x")
-		  .attr("transform", 
-		  	"translate(" + (width / 2 - 60) + " ," + (height+margin.bottom) + ")")
-		  .text(col["enrollment"])
+	    	.attr("transform", "translate(-20,0)")
+		  	.text(col["enrollment"] + " who are ")
 		bottomText.append("text")
-		  .attr("id", "group")
-		  .attr("class", "axis label x")
-		  .attr("transform", 
-		  	"translate(" + (width / 2 + 120) + " ," + (height+margin.bottom) + ")")
-		  .text("who are " + groupLabel)
+			.attr("class", "group")
+			.attr("transform", "translate(160,0)")
+		  	.text(groupLabel)
 
 		var xReferenceText = svg.append("text")
-			.attr("class", "reference label x")
+			.attr("class", "reference label x group")
 			.attr("transform",
 				"translate(" + (xScale(xMedian) + 8) + 
 				"," + (height-6) + ")")
