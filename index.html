@@ -16,6 +16,18 @@ body {
   shape-rendering: crispEdges;
 }
 
+.axis.label {
+	text-anchor: middle;
+	font-size: 18px;
+	fill: rgba(0,0,0,0.3);
+	font-weight: bold;
+}
+
+.tick text {
+	font-size: 11px;
+	fill: rgba(0,0,0,0.8);
+}
+
 .dot {
   stroke: #000;
 }
@@ -33,7 +45,7 @@ body {
 </body>
 	<script>
 // Dimensions
-var margin = {top: 20, right: 20, bottom: 30, left: 40},
+var margin = {top: 20, right: 20, bottom: 40, left: 70},
     width = 800 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 
@@ -50,7 +62,8 @@ var col = {
 var xValue = function(d) { return d[col["enrollment"]];},
     xScale = d3.scaleLinear().range([0, width]),
     xMap = function(d) { return xScale(xValue(d));},
-    xAxis = d3.axisBottom(xScale);
+    xAxis = d3.axisBottom(xScale)
+    	.tickFormat(function(d){return d*100});
 
 var yValue = function(d) { return d[col["endowment"]];},
     yScale = d3.scaleLog().domain([1e3, 1e6+6e5]).range([height, 0]), // Log scale
@@ -95,20 +108,26 @@ d3.csv("./asian-enrollment.csv").then(function(data) {
       .call(yAxis)
 
     // Create axis labels
-	svg.append("text")
-	  .attr("class", "label")
+    var bottomText = svg.append("g")
+    bottomText.append("text")
+	  .attr("class", "axis label x")
 	  .attr("transform", 
-	  	"translate(" + (width / 2) + " ," + (height+margin.bottom) + ")")
-	  .style("text-anchor", "middle")
-	  .text(col["enrollment"])	
+	  	"translate(" + (width / 2 - 60) + " ," + (height+margin.bottom) + ")")
+	  .text(col["enrollment"])
+	bottomText.append("text")
+	  .attr("id", "group")
+	  .attr("class", "axis label x")
+	  .attr("transform", 
+	  	"translate(" + (width / 2 + 120) + " ," + (height+margin.bottom) + ")")
+	  .text("who are Asian")
 
     svg.append("text")
+    	.attr("class", "axis label y")
 	    .attr("transform", "rotate(-90)")
 	    .attr("y", 0 - margin.left)
 	    .attr("x",0 - (height / 2))
 	    .attr("dy", "1em")
-	    .style("text-anchor", "middle")
-	    .text(col["endowment"]);
+	    .text(col["endowment"])
 })
 
 	</script>
