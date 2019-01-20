@@ -3,88 +3,17 @@
 <head>
 	<meta charset="UTF-8">
 	<title>D3 sketch</title>
-	<link rel="stylesheet" href="css/reveal.css">
-	<link rel="stylesheet" href="css/theme/white.css">
+	<link rel="stylesheet" href="css/scatterplot.css">
 	<script src="./d3.min.js"></script>
-	<style>
-body {
-  font: 11px sans-serif;
-}
-
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-
-.reference.y.line {
-	stroke: #000;
-	stroke-dasharray: 5;
-}
-
-.reference.y.label {
-	text-anchor: end;
-}
-
-.reference.x.line {
-	stroke-width: 2px;
-}
-
-.axis.label {
-	text-anchor: middle;
-	font-size: 18px;
-	fill: rgba(0,0,0,0.3);
-	font-weight: bold;
-}
-
-.label.asian {
-	fill: blue;
-}
-
-.asian.line {
-	stroke: blue;
-}
-
-.label.black {
-	fill: green;
-}
-
-.black.line {
-	stroke: green;
-}
-
-.tick text {
-	font-size: 11px;
-	fill: rgba(0,0,0,0.8);
-}
-
-.dot {
-  fill: rgba(0,0,0,0.2);
-}
-
-.dot.highlighted{
-	fill: rgba(0,0,0,1);
-}
-
-.tooltip {
-  position: absolute;
-  width: 200px;
-  height: 28px;
-  pointer-events: none;
-}
-	</style>
 </head>
 <body>
+<script>
 
-
-</body>
-	<script>
+// COMMON VARIABLES
 // Dimensions
 var margin = {top: 20, right: 20, bottom: 40, left: 70},
     width = 800 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
-
 
 // Column names
 var col = {
@@ -94,7 +23,6 @@ var col = {
 	"enrollment": "Percent of total enrollment",
 	"endowment": "Total endowment (log)"
 }
-
 
 // Data mappings
 var xValue = function(d) { return +d[col["enrollment"]];},
@@ -119,6 +47,8 @@ var yValue = function(d) { return +d[col["endowment"]];},
 var cValue = function(d) { return d[col["selective"]];}
 
 
+
+// INITIALIZATION
 // SVG container
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -133,29 +63,48 @@ var tooltip = d3.select("body").append("div")
 
 
 
-// Load and draw data
-var params = {
+// RUN THE CODE
+render({
 	group: "black",
 	circles: false,
 	refX: true,
 	refY: false,
 	pointAt: []
-}
-render(params);
+});
+var _transitions = [{   // For Reveal.js
+    transitionForward: function(){ update({
+    	group: "asian",
+		circles: true,
+		refX: true,
+		refY: true,
+		pointAt: []
+    }) },
+    transitionBackward: function(){ update({
+		group: "black",
+		circles: false,
+		refX: true,
+		refY: false,
+		pointAt: []
+	}) },
+    index: 0
+}]
 
-var shapes = {
+
+
+// SVG FUNCTIONS
+var shapeClasses = {
 	"circles": ".dot",
 	"refX": ".reference.x",
 	"refY": ".reference.y"
 }
 
 function toggleShapes (params, transition) {
-	for (var s in shapes) {
-		var selection = svg.selectAll(shapes[s]);
+	for (var shape in shapeClasses) {
+		var selection = svg.selectAll(shapeClasses[shape]);
 		if (transition) {
-			selection.transition(transition).style("opacity", +params[s]);
+			selection.transition(transition).style("opacity", +params[shape]);
 		} else {
-			selection.style("opacity", +params[s]);
+			selection.style("opacity", +params[shape]);
 		}
 	}
 }
@@ -314,9 +263,13 @@ function render(params) {
 	})
 }
 
+
+
+// UTILITY FUNCTIONS
 function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-	</script>
+</script>
+</body>
 </html>
