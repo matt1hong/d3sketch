@@ -140,7 +140,23 @@ var params = {
 	pointAt: []
 }
 
-function update(group) {
+var shapes = {
+	"circles": ".dot",
+	"refX": ".reference.x",
+	"refY": ".reference.y"
+}
+
+function toggleShapes (params, transition) {
+	for (var s in shapes) {
+		svg.selectAll(shapes[s])
+			.transition(transition)
+			.style("opacity", +params[s])
+	}
+}
+
+function update(params) {
+	var group = params.group;
+
 	d3.csv("./" + group + "-enrollment.csv").then(function(data) {
 
 		var t = d3.transition()
@@ -178,6 +194,7 @@ function update(group) {
 				"," + (height-6) + ")")
 			.text("Median " +groupLabel+ " enrollment")
 
+		toggleShapes(params, t)
 	})
 }
 
