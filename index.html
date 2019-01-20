@@ -131,14 +131,14 @@ var tooltip = d3.select("body").append("div")
 
 
 // Load and draw data
-render("black");
 var params = {
 	group: "black",
-	circles: true,
+	circles: false,
 	refX: true,
 	refY: false,
 	pointAt: []
 }
+render(params);
 
 var shapes = {
 	"circles": ".dot",
@@ -148,9 +148,12 @@ var shapes = {
 
 function toggleShapes (params, transition) {
 	for (var s in shapes) {
-		svg.selectAll(shapes[s])
-			.transition(transition)
-			.style("opacity", +params[s])
+		var selection = svg.selectAll(shapes[s]);
+		if (transition) {
+			selection.transition(transition).style("opacity", +params[s]);
+		} else {
+			selection.style("opacity", +params[s]);
+		}
 	}
 }
 
@@ -177,14 +180,15 @@ function update(params) {
 		var xMedian = d3.median(data, xValue)
 	    var xReference = svg.selectAll('.reference.x.line')
 			.transition(t)
+			.attr("class", "reference line x " + group)
 	        .attr('x1', xScale(xMedian))
 	        .attr('y1', yScale(yDomain[0]))
 	        .attr('x2', xScale(xMedian))
 	        .attr('y2', yScale(yDomain[1]))
 
 		var groupLabel = capitalize(group);
-		var stageText = svg.selectAll(".axis.label.x.group")
-			.attr("class", "axis label x group " + group)
+		var stageText = svg.selectAll(".axis.label.x.groupinfo")
+			.attr("class", "axis label x groupinfo " + group)
 			.text(groupLabel)
 		var stageRefText = svg.selectAll(".reference.label.x")
 			.attr("class", "reference label x " + group)
@@ -198,7 +202,9 @@ function update(params) {
 	})
 }
 
-function render(group) {
+function render(params) {
+	var group = params.group;
+
 	d3.csv("./" + group + "-enrollment.csv").then(function(data) {
 
 		// Filter
@@ -274,7 +280,7 @@ function render(group) {
 	    	.attr("transform", "translate(-20,0)")
 		  	.text(col["enrollment"] + " who are ")
 		bottomText.append("text")
-			.attr("class", "axis label x group " + group)
+			.attr("class", "axis label x groupinfo " + group)
 			.attr("transform", "translate(160,0)")
 		  	.text(groupLabel)
 
@@ -300,6 +306,8 @@ function render(group) {
 				"translate(" + (width) + 
 				"," + (yScale(84000) - 6) + ")")
 			.text("↑ Richer")
+
+		toggleShapes(params)
 	})
 }
 
