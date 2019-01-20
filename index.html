@@ -1,319 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>D3 sketch</title>
-	<script src="https://d3js.org/d3.v5.min.js"></script>
-	<style>
-body {
-  font: 11px sans-serif;
-}
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
+		<title>reveal.js</title>
 
-.reference.y.line {
-	stroke: #000;
-	stroke-dasharray: 5;
-}
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/white.css">
 
-.reference.y.label {
-	text-anchor: end;
-}
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
 
-.reference.x.line {
-	stroke-width: 2px;
-}
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+				    <div class="fig-container"
+				         data-file="d3.html"></div> 
+				</section>
+				<section>Slide 2</section>
+			</div>
+		</div>
 
-.axis.label {
-	text-anchor: middle;
-	font-size: 18px;
-	fill: rgba(0,0,0,0.3);
-	font-weight: bold;
-}
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
 
-.label.asian {
-	fill: blue;
-}
-
-.asian.line {
-	stroke: blue;
-}
-
-.label.black {
-	fill: green;
-}
-
-.black.line {
-	stroke: green;
-}
-
-.tick text {
-	font-size: 11px;
-	fill: rgba(0,0,0,0.8);
-}
-
-.dot {
-  fill: rgba(0,0,0,0.2);
-}
-
-.dot.highlighted{
-	fill: rgba(0,0,0,1);
-}
-
-.tooltip {
-  position: absolute;
-  width: 200px;
-  height: 28px;
-  pointer-events: none;
-}
-	</style>
-</head>
-<body>
-
-</body>
-	<script>
-// Dimensions
-var margin = {top: 20, right: 20, bottom: 40, left: 70},
-    width = 800 - margin.left - margin.right,
-    height = 600 - margin.top - margin.bottom;
-
-
-// Column names
-var col = {
-	"selective": "ACT Composite 25th percentile score (bin)",
-	"region": "Geographic region (group)",
-	"name": "Name",
-	"enrollment": "Percent of total enrollment",
-	"endowment": "Total endowment (log)"
-}
-
-
-// Data mappings
-var xValue = function(d) { return +d[col["enrollment"]];},
-	xDomain = [0,36],
-    xScale = d3.scaleLinear().domain(xDomain).range([0, width]),
-    xMap = function(d) { return xScale(xValue(d));},
-    xAxis = d3.axisBottom(xScale)
-    	.tickFormat(function(d){return d});
-
-var yValue = function(d) { return +d[col["endowment"]];},
-	yDomain = [1e3, 3e6],
-    yScale = d3.scaleLog().domain(yDomain).range([height, 0]), // Log scale
-    yMap = function(d) { return yScale(yValue(d));},
-    yAxis = d3.axisLeft(yScale)
-    	.ticks(4)
-    	.tickFormat(function(d){
-    		if (d.toString()[0] == 1) {
-    			return d3.format(",.0f")(d/1000) + "K"
-    		}
-    	})
-
-var cValue = function(d) { return d[col["selective"]];}
-
-
-// SVG container
-var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-// Tooltips container
-var tooltip = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
-
-
-
-// Load and draw data
-var params = {
-	group: "black",
-	circles: false,
-	refX: true,
-	refY: false,
-	pointAt: []
-}
-render(params);
-
-var shapes = {
-	"circles": ".dot",
-	"refX": ".reference.x",
-	"refY": ".reference.y"
-}
-
-function toggleShapes (params, transition) {
-	for (var s in shapes) {
-		var selection = svg.selectAll(shapes[s]);
-		if (transition) {
-			selection.transition(transition).style("opacity", +params[s]);
-		} else {
-			selection.style("opacity", +params[s]);
-		}
-	}
-}
-
-function update(params) {
-	var group = params.group;
-
-	d3.csv("./" + group + "-enrollment.csv").then(function(data) {
-
-		var t = d3.transition()
-		      .duration(750)
-		      .ease(d3.easeLinear);
-
-		var stage = svg.selectAll(".dot")
-			.data(data);
-
-		stage.exit()
-			.remove();
-
-		stage.transition(t)
-			.attr("cx", xMap)
-			.attr("cy", yMap)
-
-		// Reference lines
-		var xMedian = d3.median(data, xValue)
-	    var xReference = svg.selectAll('.reference.x.line')
-			.transition(t)
-			.attr("class", "reference line x " + group)
-	        .attr('x1', xScale(xMedian))
-	        .attr('y1', yScale(yDomain[0]))
-	        .attr('x2', xScale(xMedian))
-	        .attr('y2', yScale(yDomain[1]))
-
-		var groupLabel = capitalize(group);
-		var stageText = svg.selectAll(".axis.label.x.groupinfo")
-			.attr("class", "axis label x groupinfo " + group)
-			.text(groupLabel)
-		var stageRefText = svg.selectAll(".reference.label.x")
-			.attr("class", "reference label x " + group)
-			.transition(t)
-			.attr("transform",
-				"translate(" + (xScale(xMedian) + 8) + 
-				"," + (height-6) + ")")
-			.text("Median " +groupLabel+ " enrollment")
-
-		toggleShapes(params, t)
-	})
-}
-
-function render(params) {
-	var group = params.group;
-
-	d3.csv("./" + group + "-enrollment.csv").then(function(data) {
-
-		// Filter
-		var regionFilter = function(d) { return d[col["region"]] == "Atlantic & Pacific Ocean States" };
-
-
-		// Create axes and ticks
-		var bottom = svg.append("g")
-	      .attr("class", "x axis")
-	      .attr("transform", "translate(0," + height + ")")
-	      .call(xAxis)  
-
-	    var left =   svg.append("g")
-	      .attr("class", "y axis")
-	      .call(yAxis)
-
-
-		// Draw circles
-		var circles = svg.selectAll(".dot")
-				.data(data.filter(regionFilter))
-		    .enter().append("circle")
-			    .attr("class", function(d) { 
-			      	if (d[col["selective"]] == "Selective") {
-						return "dot highlighted"
-			      	} else {
-			      		return "dot"
-			      	}
-			    })
-			    .attr("r", 6)
-			    .attr("cx", xMap)
-			    .attr("cy", yMap)
-
-		circles.on("mouseover", function(d) {
-		          tooltip.transition()
-		               .duration(200)
-		               .style("opacity", .9);
-		          tooltip.html(d[col["name"]] + "<br/> (" + xValue(d) 
-			        + ", " + yValue(d) + ")")
-		               .style("left", (d3.event.pageX + 5) + "px")
-		               .style("top", (d3.event.pageY - 28) + "px");
-		      })
-		      .on("mouseout", function(d) {
-		          tooltip.transition()
-		               .duration(500)
-		               .style("opacity", 0);
-		      });
-
-
-		// Draw reference lines
-		var xMedian = d3.median(data, xValue)
-	    var xReference = svg.append('line')
-	        .attr('x1', xScale(xMedian))
-	        .attr('y1', yScale(yDomain[0]))
-	        .attr('x2', xScale(xMedian))
-	        .attr('y2', yScale(yDomain[1]))
-	        .attr('class', 'reference x line ' + group);
-	    var yReference = svg.append('line')
-	        .attr('x1', xScale(xDomain[0]))
-	        .attr('y1', yScale(84000))
-	        .attr('x2', xScale(xDomain[1]))
-	        .attr('y2', yScale(84000))
-	        .attr('class', 'reference y line');
-
-
-	    // Create axis labels
-	    var groupLabel = capitalize(group);
-	    // x axis
-	    var bottomText = svg.append("g")
-		  .attr("transform", 
-		  	"translate(" + (width / 2) + " ," + (height+margin.bottom) + ")")
-	    bottomText.append("text")
-	    	.attr("class", "axis label x")
-	    	.attr("transform", "translate(-20,0)")
-		  	.text(col["enrollment"] + " who are ")
-		bottomText.append("text")
-			.attr("class", "axis label x groupinfo " + group)
-			.attr("transform", "translate(160,0)")
-		  	.text(groupLabel)
-
-		var xReferenceText = svg.append("text")
-			.attr("class", "reference label x " + group)
-			.attr("transform",
-				"translate(" + (xScale(xMedian) + 8) + 
-				"," + (height-6) + ")")
-			.text("Median " +groupLabel+ " enrollment")
-
-		// y axis
-	    svg.append("text")
-	    	.attr("class", "axis label y")
-		    .attr("transform", "rotate(-90)")
-		    .attr("y", 0 - margin.left)
-		    .attr("x",0 - (height / 2))
-		    .attr("dy", "1em")
-		    .text(col["endowment"])
-
-		var yReferenceText = svg.append("text")
-			.attr("class", "reference label y")
-			.attr("transform",
-				"translate(" + (width) + 
-				"," + (yScale(84000) - 6) + ")")
-			.text("↑ Richer")
-
-		toggleShapes(params)
-	})
-}
-
-function capitalize(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-	</script>
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/reveald3/reveald3.js' }
+				]
+			});
+		</script>
+	</body>
 </html>
