@@ -20,15 +20,28 @@
 			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
 			document.getElementsByTagName( 'head' )[0].appendChild( link );
 		</script>
+		<style>
+			.reveal .slides {
+				text-align: left;
+			}
+			.reveal p {
+				font-size: 32px;
+			}
+		</style>
 	</head>
 	<body>
 		<div class="reveal">
 			<div class="slides">
 				<section>
-				    <div class="fig-container"
-				         data-file="d3.html"></div> 
+					<p>Black students are under-enrolled at elite colleges</p>
+					<div style="position: relative;">
+					    <div class="fig-container"
+					         data-file="d3.html"></div> 
+					    <div class="fig-container"
+					         data-file="notes.html"
+					         style="position: absolute; top:350px; left:500px;"></div>
+				    </div> 
 				</section>
-				<section>Slide 2</section>
 			</div>
 		</div>
 
