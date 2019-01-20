@@ -3,25 +3,35 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Notes for D3 presentation</title>
+	<link href="https://fonts.googleapis.com/css?family=Mukta|PT+Serif" rel="stylesheet">
 	<script src="./d3.min.js"></script>
 <style>
-	#container {
-		width: 300px;
+	body {
+		width: 360px;
 		height: 150px;
+		font-family: 'PT Serif', serif;
 	}
 	#notes {
 		text-align: right;
-		padding-right:40px;
 	}
 </style>
 </head>
 <body>
 <div id="container">
-	<p id="notes"></p>
+	<p id="notes">First text</p>
 </div>
 <script>
+
+function annotate(text) {
 	d3.select("#notes")
-		.text("Story 1")
+		.text(text)
+}
+
+var _transitions = [{
+    transitionForward: function(){ annotate("Second text") },
+    transitionBackward: function(){ annotate("First text") },
+    index: 0
+}]
 </script>
 </body>
 </html>

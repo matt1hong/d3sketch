@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>D3 sketch</title>
+	<link href="https://fonts.googleapis.com/css?family=Mukta" rel="stylesheet">
 	<link rel="stylesheet" href="css/scatterplot.css">
 	<script src="./d3.min.js"></script>
 </head>
@@ -13,8 +14,8 @@
 
 // COMMON VARIABLES
 // Dimensions
-var margin = {top: 20, right: 20, bottom: 40, left: 70},
-    width = 800 - margin.left - margin.right,
+var margin = {top: 20, right: 20, bottom: 45, left: 70},
+    width = 960 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 
 // Column names
@@ -143,7 +144,7 @@ function update(params) {
 		var groupLabel = capitalize(group);
 		var stageText = svg.selectAll(".axis.label.x.groupinfo")
 			.attr("class", "axis label x groupinfo " + group)
-			.text(groupLabel)
+			.text(" who are " + groupLabel)
 		var stageRefText = svg.selectAll(".reference.label.x")
 			.attr("class", "reference label x " + group)
 			.transition(t)
@@ -228,15 +229,15 @@ function render(params) {
 	    // x axis
 	    var bottomText = svg.append("g")
 		  .attr("transform", 
-		  	"translate(" + (width / 2) + " ," + (height+margin.bottom) + ")")
+		  	"translate(" + (width / 2) + " ," + (height+margin.bottom - 2) + ")")
 	    bottomText.append("text")
 	    	.attr("class", "axis label x")
-	    	.attr("transform", "translate(-20,0)")
-		  	.text(col["enrollment"] + " who are ")
+	    	.attr("transform", "translate(-50,0)")
+		  	.text(col["enrollment"])
 		bottomText.append("text")
 			.attr("class", "axis label x groupinfo " + group)
-			.attr("transform", "translate(160,0)")
-		  	.text(groupLabel)
+			.attr("transform", "translate(125,0)")
+		  	.text(" who are " + groupLabel)
 
 		var xReferenceText = svg.append("text")
 			.attr("class", "reference label x " + group)
