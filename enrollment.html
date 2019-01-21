@@ -85,6 +85,73 @@ var _transitions = [{   // For Reveal.js
 		colorCircles: true
     }) },
     index: 3
+},{
+    transitionForward: function(){ update({
+    	group: "black",
+    	region: "Atlantic",
+		circles: true,
+		refX: true,
+		refY: true,
+		pointAt: [],
+		colorCircles: true
+    }) },
+    index: 4
+},{
+    transitionForward: function(){ update({
+    	group: "asian",
+    	region: "Atlantic",
+		circles: true,
+		refX: true,
+		refY: true,
+		pointAt: [],
+		colorCircles: true
+    }) },
+    index: 5
+},{
+	// Third region
+	transitionBackward: function(){ update({
+		group: "asian",
+    	region: "Atlantic",
+    	reset: true,
+		circles: true,
+		refX: true,
+		refY: true,
+		pointAt: [],
+		colorCircles: true
+	}) },
+    transitionForward: function(){ update({
+    	group: "black",
+    	region: "South",
+    	reset: true,
+		circles: true,
+		refX: true,
+		refY: true,
+		pointAt: [],
+		colorCircles: true
+    }) },
+    index: 6
+},{
+    transitionForward: function(){ update({
+    	group: "black",
+    	region: "South",
+		circles: true,
+		refX: true,
+		refY: true,
+		pointAt: ["Duke", "Vanderbilt", "Emory"],
+		colorCircles: true
+    }) },
+    index: 7
+},{
+    transitionForward: function(){ update({
+    	group: "asian",
+    	region: "South",
+		circles: true,
+		refX: true,
+		refY: true,
+		pointAt: [],
+		colorCircles: true
+    }) },
+    index: 8
 }]
 </script>
 </body>

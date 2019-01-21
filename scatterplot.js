@@ -233,7 +233,7 @@ function render(params) {
 			.attr("transform",
 				"translate(" + (width) + 
 				"," + (yScale(84000) - 6) + ")")
-			.text("↑ Richer")
+			.text("Average endowment")
 
 		toggleShapes(params)
 	})

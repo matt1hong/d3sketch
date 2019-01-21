@@ -28,6 +28,7 @@ function annotate(text) {
 }
 
 var _transitions = [{
+	// First region
 	transitionBackward: function(){ annotate(
     	"On average, Black students make up 6% of university student enrollment nationwide."
     ) },
@@ -42,9 +43,41 @@ var _transitions = [{
     index: 1
 },{
     transitionForward: function(){ annotate(
-    	"On the other hand, almost all selective universities enroll more Asian students than the average."
+    	"On the other hand, almost every selective university enrolls more Asian students than the average."
     ) },
     index: 2
+},{
+	// Second region
+    transitionForward: function(){ annotate(
+    	"Among selective universities in the coastal states, only George Washington University enrolls more Black students than the median."
+    ) },
+    index: 3
+},{
+    transitionForward: function(){ annotate(
+    	"But GWU is not among the richer selective schools."
+    ) },
+    index: 4
+},{
+    transitionForward: function(){ annotate(
+    	"And rich or not, every selective university enrolls more Asian students than the average."
+    ) },
+    index: 5
+},{
+	// Third region
+    transitionForward: function(){ annotate(
+    	"Black students are well represented in the South, among both selective and less selective universities."
+    ) },
+    index: 6
+},{
+    transitionForward: function(){ annotate(
+    	"A few of these universities are also heavily funded."
+    ) },
+    index: 7
+},{
+    transitionForward: function(){ annotate(
+    	"But even though Asian students are generally underrepresented among Southern universities, they are overrepresented among the selective ones."
+    ) },
+    index: 8
 }]
 </script>
 </body>
