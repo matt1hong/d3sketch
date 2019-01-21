@@ -80,7 +80,7 @@ function update(params) {
 			return d[col["region"]].indexOf(params.region) > -1 };
 
 		var t = d3.transition()
-		      .duration(750)
+		      .duration(params.reset ? 0 : 750)
 		      .ease(d3.easeLinear);
 
 		var stage = svg.selectAll(".dot")

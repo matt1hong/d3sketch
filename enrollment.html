@@ -20,6 +20,7 @@ render({
 	colorCircles: false
 });
 var _transitions = [{   // For Reveal.js
+	// First region
 	transitionBackward: function(){ update({
 		group: "black",
 		region: "Great Lakes",
@@ -61,6 +62,29 @@ var _transitions = [{   // For Reveal.js
 		colorCircles: true
     }) },
     index: 2
+},{
+	// Second region
+	transitionBackward: function(){ update({
+		group: "asian",
+    	region: "Great Lakes",
+    	reset: true,
+		circles: true,
+		refX: true,
+		refY: false,
+		pointAt: [],
+		colorCircles: true
+	}) },
+    transitionForward: function(){ update({
+    	group: "black",
+    	region: "Atlantic",
+    	reset: true,
+		circles: true,
+		refX: true,
+		refY: false,
+		pointAt: [],
+		colorCircles: true
+    }) },
+    index: 3
 }]
 </script>
 </body>
