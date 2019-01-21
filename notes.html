@@ -12,76 +12,92 @@
 		font-family: 'PT Serif', serif;
 		font-size: 18px;
 	}
-	#notes {
+	#notes, #header {
 		text-align: right;
+	}
+	#header {
+		font-size: 16px;
+		text-transform: uppercase;
 	}
 </style>
 </head>
 <body>
 <div id="container">
+	<p id="header"></p>
 	<p id="notes">On average, Black students make up 6% of university enrollment nationwide.</p>
 </div>
 <script>
 
-function annotate(text) {
-	d3.select("#notes")
-		.text(text)
+function annotate(header,text) {
+	d3.select("#header").text(header)
+	d3.select("#notes").text(text)
 }
 
 // For Reveal.js
 var _transitions = [{
 	// First region
 	transitionBackward: function(){ annotate(
+		"",
     	"On average, Black students make up 6% of university student enrollment nationwide."
     ) },
     transitionForward: function(){ annotate(
+    	"East Coast & West Coast",
     	"Many schools in this region enroll more Black students than the average."
     ) },
     index: 0
 },{
     transitionForward: function(){ annotate(
+    	"East Coast & West Coast",
     	"However, no selective university in this region enrolls more Black students than the average. We define 'selective' as having an ACT 25th percentile score of at least 27."
     ) },
     index: 1
 },{
     transitionForward: function(){ annotate(
+    	"East Coast & West Coast",
     	"On the other hand, almost every selective university enrolls more Asian students than the average."
     ) },
     index: 2
 },{
 	// Second region
     transitionForward: function(){ annotate(
+    	"Great Lakes, Plains and Mountains",
     	"Among selective universities in the coastal states, only George Washington University enrolls more Black students than the median."
     ) },
     index: 3
 },{
     transitionForward: function(){ annotate(
+    	"Great Lakes, Plains and Mountains",
     	"But GWU is not among the richer schools."
     ) },
     index: 4
 },{
     transitionForward: function(){ annotate(
+    	"Great Lakes, Plains and Mountains",
     	"And rich or not, every selective university enrolls more Asian students than the average."
     ) },
     index: 5
 },{
 	// Third region
     transitionForward: function(){ annotate(
+    	"Southwestern & Southeastern",
     	"Black students are well represented in the South, among both selective and less selective universities."
     ) },
     index: 6
 },{
     transitionForward: function(){ annotate(
+    	"Southwestern & Southeastern",
     	"A few of these universities are also heavily funded."
     ) },
     index: 7
 },{
     transitionForward: function(){ annotate(
+    	"Southwestern & Southeastern",
     	"But even though Asian students are generally underrepresented among Southern universities, they are generally overrepresented among the selective ones."
     ) },
     index: 8
 },{
     transitionForward: function(){ annotate(
+    	"",
     	"Use the above controls to explore the data."
     ) },
     index: 9
