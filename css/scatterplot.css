@@ -2,6 +2,7 @@ body {
 	margin: 0;
 	font-family: 'Mukta', sans-serif;
   	font-size: 12px;
+  	overflow: hidden;
 }
 
 .axis path,
