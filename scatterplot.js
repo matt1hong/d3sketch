@@ -196,7 +196,7 @@ function render(params) {
 		               .style("opacity", .9);
 		          tooltip.html(d[col["name"]] + "<br/>" 
 		          	+ "Enrollment: " + xValue(d) + "%<br/>"
-			        + "Endowment: $" + yValue(d))
+			        + "Endowment: $" + formatNumber(yValue(d)))
 		               .style("left", (d3.event.pageX + 5) + "px")
 		               .style("top", (d3.event.pageY - 28) + "px");
 		      })
@@ -271,5 +271,11 @@ function render(params) {
 function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+function formatNumber (num) {
+    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+}
+
+
 
 
