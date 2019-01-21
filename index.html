@@ -46,7 +46,7 @@
 					<p class="title">Student representation at elite universities: over/under?</p>
 					<div style="position: relative;">
 					    <div class="fig-container" data-file="enrollment.html"></div> 
-					    <p class="options" style="position: absolute; top:50px; left: 550px;">
+					    <p class="options" style="position: absolute; top:50px; left: 550px; display:none;">
 					    	Show me <button>black</button> enrollment.
 					    </p>
 					    <div class="fig-container"
@@ -77,6 +77,11 @@
 					keepIframe: true
 				}
 			});
+			Reveal.addEventListener( 'fragmentshown', function( event ) {
+				if (+event.fragment.dataset.fragmentIndex > 8) {
+					document.querySelector('.options').style["display"] = "block";
+				}
+			} );
 		</script>
 	</body>
 </html>

@@ -122,7 +122,6 @@ function update(params) {
 				.attr("y", yMap)
 				.attr("transform", function(d) {
 					var translation = pointAt[d[col["name"]]];
-					console.log(translation)
 					return "translate("+translation.x+","+translation.y+")"
 				})
 		}
