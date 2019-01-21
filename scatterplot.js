@@ -108,10 +108,12 @@ function update(params) {
 			.attr("cy", yMap)
 		
 		// Point out selected circles
+		svg.selectAll(".dotinfo").remove();
 		if (params.pointAt.length > 0) {
 			svg.selectAll(".dotinfo")
 				.data(data.filter(pointAtFilter))
 			.enter().append("text")
+				.attr("class", "dotinfo")
 				.text(function(d){
 					return d[col["name"]];
 				})
