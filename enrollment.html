@@ -13,16 +13,27 @@
 
 // Data exploration
 var slideNode = Array.prototype.slice.call(window.parent.document.querySelectorAll('section')).filter(d => d.className.includes("present"))[0]
-var button = d3.select(slideNode).select('button');
-button.on('click', function(){ update({
-	group: "black",
-	region: "Great Lakes",
-	circles: true,
-	refX: true,
-	refY: true,
-	pointAt: [],
-	colorCircles: true
-})})
+var groupSelect = d3.select(slideNode).select('#group-select');
+var regionSelect = d3.select(slideNode).select('#region-select');
+groupSelect.on('change', function(e,i,option){ 
+	update({
+		group: option[0].value,
+		region: regionSelect.node().value,
+		circles: true,
+		refX: true,
+		refY: true,
+		colorCircles: true
+	})})
+regionSelect.on('change', function(e,i,option){ 
+	update({
+		group: groupSelect.node().value,
+		region: option[0].value,
+		reset: true,
+		circles: true,
+		refX: true,
+		refY: true,
+		colorCircles: true
+	})})
 
 // Initial state
 render({
@@ -174,6 +185,17 @@ var _transitions = [{
     }) },
     index: 8
 },{
+	// Exploration
+	transitionBackward: function(){ update({
+    	group: "asian",
+    	region: "South",
+    	reset: true,
+		circles: true,
+		refX: true,
+		refY: true,
+		pointAt: [],
+		colorCircles: true
+    }) },
     transitionForward: function(){ update({
     	group: "asian",
     	region: "South",

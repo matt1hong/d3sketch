@@ -110,7 +110,7 @@ function update(params) {
 		
 		// Point out selected circles
 		svg.selectAll(".dotinfo").remove();
-		if (Object.keys(pointAt).length > 0) {
+		if (pointAt && Object.keys(pointAt).length > 0) {
 			svg.selectAll(".dotinfo")
 				.data(data.filter(pointAtFilter))
 			.enter().append("text")
