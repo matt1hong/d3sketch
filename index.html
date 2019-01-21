@@ -36,10 +36,9 @@
 		<div class="reveal">
 			<div class="slides">
 				<section>
-					<p>Black students are under-enrolled at elite universities</p>
+					<p>Are Black students underrepresented at elite universities?</p>
 					<div style="position: relative;">
-					    <div class="fig-container"
-					         data-file="d3.html"></div> 
+					    <div class="fig-container" data-file="enrollment.html"></div> 
 					    <div class="fig-container"
 					         data-file="notes.html"
 					         style="position: absolute; top:350px; left:50%;"></div>
@@ -56,13 +55,17 @@
 			// - https://github.com/hakimel/reveal.js#configuration
 			// - https://github.com/hakimel/reveal.js#dependencies
 			Reveal.initialize({
+				transition: 'none',
 				dependencies: [
 					{ src: 'plugin/markdown/marked.js' },
 					{ src: 'plugin/markdown/markdown.js' },
 					{ src: 'plugin/notes/notes.js', async: true },
 					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
 					{ src: 'plugin/reveald3/reveald3.js' }
-				]
+				],
+				reveald3: {
+					keepIframe: true
+				}
 			});
 		</script>
 	</body>

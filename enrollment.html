@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Great Lakes</title>
+	<link href="https://fonts.googleapis.com/css?family=Mukta" rel="stylesheet">
+	<link rel="stylesheet" href="css/scatterplot.css">
+	<script src="./d3.min.js"></script>
+</head>
+<body>
+<script src="scatterplot.js"></script>
+<script>
+render({
+	group: "black",
+	region: "Great Lakes",
+	circles: false,
+	refX: true,
+	refY: false,
+	pointAt: [],
+	colorCircles: false
+});
+var _transitions = [{   // For Reveal.js
+	transitionBackward: function(){ update({
+		group: "black",
+		region: "Great Lakes",
+		circles: false,
+		refX: true,
+		refY: false,
+		pointAt: [],
+		colorCircles: false
+	}) },
+    transitionForward: function(){ update({
+    	group: "black",
+    	region: "Great Lakes",
+		circles: true,
+		refX: true,
+		refY: false,
+		pointAt: [],
+		colorCircles: false
+    }) },
+    index: 0
+},{
+    transitionForward: function(){ update({
+    	group: "black",
+    	region: "Great Lakes",
+		circles: true,
+		refX: true,
+		refY: false,
+		pointAt: [],
+		colorCircles: true
+    }) },
+    index: 1
+},{
+    transitionForward: function(){ update({
+    	group: "asian",
+    	region: "Great Lakes",
+		circles: true,
+		refX: true,
+		refY: false,
+		pointAt: [],
+		colorCircles: true
+    }) },
+    index: 2
+}]
+</script>
+</body>
+</html>

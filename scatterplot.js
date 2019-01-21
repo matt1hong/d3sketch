@@ -1,18 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>D3 sketch</title>
-	<link href="https://fonts.googleapis.com/css?family=Mukta" rel="stylesheet">
-	<link rel="stylesheet" href="css/scatterplot.css">
-	<script src="./d3.min.js"></script>
-</head>
-<body>
-<script>
 
-
-
-// COMMON VARIABLES
+//// COMMON VARIABLES
 // Dimensions
 var margin = {top: 20, right: 20, bottom: 45, left: 70},
     width = 960 - margin.left - margin.right,
@@ -51,7 +38,7 @@ var cValue = function(d) { return d[col["selective"]];}
 
 
 
-// D3 INITIALIZATION
+//// D3 INITIALIZATION
 // SVG container
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -66,63 +53,7 @@ var tooltip = d3.select("body").append("div")
 
 
 
-// RUN THE D3 CODE
-render({
-	group: "black",
-	region: "Great Lakes",
-	circles: false,
-	refX: true,
-	refY: false,
-	pointAt: [],
-	colorCircles: false
-});
-var _transitions = [{   // For Reveal.js
-	transitionBackward: function(){ update({
-		group: "black",
-		region: "Great Lakes",
-		circles: false,
-		refX: true,
-		refY: false,
-		pointAt: [],
-		colorCircles: false
-	}) },
-    transitionForward: function(){ update({
-    	group: "black",
-    	region: "Great Lakes",
-		circles: true,
-		refX: true,
-		refY: false,
-		pointAt: [],
-		colorCircles: false
-    }) },
-    index: 0
-},{
-    transitionForward: function(){ update({
-    	group: "black",
-    	region: "Great Lakes",
-		circles: true,
-		refX: true,
-		refY: false,
-		pointAt: [],
-		colorCircles: true
-    }) },
-    index: 1
-},{
-    transitionForward: function(){ update({
-    	group: "asian",
-    	region: "Great Lakes",
-		circles: true,
-		refX: true,
-		refY: false,
-		pointAt: [],
-		colorCircles: true
-    }) },
-    index: 2
-}]
-
-
-
-// SVG CODE (USED ABOVE)
+//// SVG CODE
 var shapeClasses = {
 	"circles": ".dot",
 	"refX": ".reference.x",
@@ -164,7 +95,7 @@ function update(params) {
 		      		&& params.colorCircles) {
 					return "rgba(0,0,0,1)"
 		      	} else {
-		      		return "rgba(0,0,0,0.2)"
+		      		return "rgba(0,0,0,0.1)"
 		      	}
 		    })
 			.attr("cx", xMap)
@@ -227,7 +158,7 @@ function render(params) {
 			      		&& params.colorCircles) {
 						return "rgba(0,0,0,1)"
 			      	} else {
-			      		return "rgba(0,0,0,0.2)"
+			      		return "rgba(0,0,0,0.1)"
 			      	}
 			    })
 			    .attr("r", 6)
@@ -310,11 +241,9 @@ function render(params) {
 
 
 
-// UTILITY FUNCTIONS
+//// UTILITY FUNCTIONS
 function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-</script>
-</body>
-</html>
+
