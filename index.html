@@ -25,10 +25,17 @@
 			.reveal .slides {
 				text-align: left;
 			}
-			.reveal p {
+			.reveal p.title {
 				margin: 10px 0;
 				font-size: 32px;
 				font-family: 'Mukta', sans-serif;
+				color: rgba(0,0,0,0.75);
+			}
+			.reveal p.options {
+				margin: 10px 0;
+				font-size: 12px;
+				font-family: 'Mukta', sans-serif;
+				color: rgba(0,0,0,0.75);
 			}
 		</style>
 	</head>
@@ -36,12 +43,15 @@
 		<div class="reveal">
 			<div class="slides">
 				<section>
-					<p>Student representation at elite universities: over/under?</p>
+					<p class="title">Student representation at elite universities: over/under?</p>
 					<div style="position: relative;">
 					    <div class="fig-container" data-file="enrollment.html"></div> 
+					    <p class="options" style="position: absolute; top:20px; left: 600px;">
+					    	Show me <button>black</button> enrollment.
+					    </p>
 					    <div class="fig-container"
 					         data-file="notes.html"
-					         style="position: absolute; top:350px; left:50%;"></div>
+					         style="position: absolute; top:350px; left:480px;"></div>
 				    </div> 
 				</section>
 			</div>

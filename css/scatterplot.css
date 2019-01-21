@@ -12,16 +12,21 @@ body {
 }
 
 .reference.y.line {
-	stroke: #000;
+	stroke: rgba(0,0,0,1);
 	stroke-dasharray: 5;
 }
 
 .reference.y.label {
 	text-anchor: end;
+	fill: rgba(0,0,0,1);
 }
 
 .reference.x.line {
 	stroke-width: 2px;
+}
+
+.reference.label {
+	font-size: 14px;
 }
 
 .axis.label {
