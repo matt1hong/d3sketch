@@ -11,18 +11,20 @@
 <script src="scatterplot.js"></script>
 <script>
 
+// Data exploration
 var slideNode = Array.prototype.slice.call(window.parent.document.querySelectorAll('section')).filter(d => d.className.includes("present"))[0]
 var button = d3.select(slideNode).select('button');
 button.on('click', function(){ update({
-    	group: "black",
-    	region: "Great Lakes",
-		circles: true,
-		refX: true,
-		refY: true,
-		pointAt: [],
-		colorCircles: true
-    })})
+	group: "black",
+	region: "Great Lakes",
+	circles: true,
+	refX: true,
+	refY: true,
+	pointAt: [],
+	colorCircles: true
+})})
 
+// Initial state
 render({
 	group: "black",
 	region: "Great Lakes",
@@ -33,7 +35,8 @@ render({
 	colorCircles: false
 });
 
-var _transitions = [{   // For Reveal.js
+// For Reveal.js
+var _transitions = [{
 	// First region
 	transitionBackward: function(){ update({
 		group: "black",

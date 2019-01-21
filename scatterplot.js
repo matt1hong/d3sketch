@@ -77,12 +77,18 @@ function update(params) {
 	d3.csv("./" + group + "-enrollment.csv").then(function(data) {
 		// Filter
 		var regionFilter = function(d) { 
-			return d[col["region"]].indexOf(params.region) > -1 };
+			return d[col["region"]].indexOf(params.region) > -1 
+		};
+		var pointAtFilter = function(d) {
+			return params.pointAt.indexOf(d[col["name"]]) > -1
+		};
 
+		// Transitions
 		var t = d3.transition()
 		      .duration(params.reset ? 0 : 750)
 		      .ease(d3.easeLinear);
 
+		// Circles
 		var stage = svg.selectAll(".dot")
 			.data(data.filter(regionFilter));
 
@@ -93,37 +99,50 @@ function update(params) {
 			.attr("fill", function(d) { 
 		      	if (d[col["selective"]] == "Selective"
 		      		&& params.colorCircles) {
-					return "rgba(0,0,0,1)"
+					return "rgba(0,0,0,1)";
 		      	} else {
-		      		return "rgba(0,0,0,0.1)"
+		      		return "rgba(0,0,0,0.1)";
 		      	}
 		    })
 			.attr("cx", xMap)
 			.attr("cy", yMap)
+		
+		// Point out selected circles
+		if (params.pointAt.length > 0) {
+			svg.selectAll(".dotinfo")
+				.data(data.filter(pointAtFilter))
+			.enter().append("text")
+				.text(function(d){
+					return d[col["name"]];
+				})
+				.attr("x", xMap)
+				.attr("y", yMap)
+				.attr("transform", "translate(5,-5)")
+		}
 
 		// Reference lines
-		var xMedian = d3.median(data, xValue)
+		var xMedian = d3.median(data, xValue);
 	    var xReference = svg.selectAll('.reference.x.line')
 			.transition(t)
 			.attr("class", "reference line x " + group)
 	        .attr('x1', xScale(xMedian))
 	        .attr('y1', yScale(yDomain[0]))
 	        .attr('x2', xScale(xMedian))
-	        .attr('y2', yScale(yDomain[1]))
+	        .attr('y2', yScale(yDomain[1]));
 
 		var groupLabel = capitalize(group);
 		var stageText = svg.selectAll(".axis.label.x.groupinfo")
 			.attr("class", "axis label x groupinfo " + group)
-			.text(" who are " + groupLabel)
+			.text(" who are " + groupLabel);
 		var stageRefText = svg.selectAll(".reference.label.x")
 			.attr("class", "reference label x " + group)
 			.transition(t)
 			.attr("transform",
 				"translate(" + (xScale(xMedian) + 8) + 
 				"," + (height-6) + ")")
-			.text("Median " +groupLabel+ " enrollment")
+			.text("Median " +groupLabel+ " enrollment");
 
-		toggleShapes(params, t)
+		toggleShapes(params, t);
 	})
 }
 
@@ -169,8 +188,9 @@ function render(params) {
 		          tooltip.transition()
 		               .duration(200)
 		               .style("opacity", .9);
-		          tooltip.html(d[col["name"]] + "<br/> (" + xValue(d) 
-			        + ", " + yValue(d) + ")")
+		          tooltip.html(d[col["name"]] + "<br/>" 
+		          	+ "Enrollment: " + xValue(d) + "%<br/>"
+			        + "Endowment: $" + yValue(d))
 		               .style("left", (d3.event.pageX + 5) + "px")
 		               .style("top", (d3.event.pageY - 28) + "px");
 		      })
