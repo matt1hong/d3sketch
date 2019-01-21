@@ -22,6 +22,9 @@
   "engines": {
     "node": ">=4.0.0"
   },
+  "dependencies": {
+    "express": "3.x.x"
+  },
   "devDependencies": {
     "express": "^4.16.2",
     "grunt": "^1.0.1",
