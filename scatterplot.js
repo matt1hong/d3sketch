@@ -186,7 +186,7 @@ function render(params) {
 			      		return "rgba(133,118,187,0.2)"
 			      	}
 			    })
-			    .attr("r", 6)
+			    .attr("r", 10)
 			    .attr("cx", xMap)
 			    .attr("cy", yMap)
 
@@ -252,7 +252,7 @@ function render(params) {
 		    .attr("y", 0 - margin.left)
 		    .attr("x",0 - (height / 2))
 		    .attr("dy", "1em")
-		    .text(col["endowment"])
+		    .text("Endowment per student (log)")
 
 		var yReferenceText = svg.append("text")
 			.attr("class", "reference label y")
