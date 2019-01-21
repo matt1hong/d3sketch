@@ -37,19 +37,19 @@ body {
 }
 
 .label.asian {
-	fill: blue;
+	fill: rgb(0,166,111);
 }
 
 .asian.line {
-	stroke: blue;
+	stroke: rgb(0,166,111);
 }
 
 .label.black {
-	fill: green;
+	fill: rgb(225,170,0);
 }
 
 .black.line {
-	stroke: green;
+	stroke: rgb(225,170,0);
 }
 
 .tick text {

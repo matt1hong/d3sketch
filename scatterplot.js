@@ -100,9 +100,9 @@ function update(params) {
 			.attr("fill", function(d) { 
 		      	if (d[col["selective"]] == "Selective"
 		      		&& params.colorCircles) {
-					return "rgba(0,0,0,1)";
+					return "rgba(133,118,187,1)";
 		      	} else {
-		      		return "rgba(0,0,0,0.1)";
+		      		return "rgba(133,118,187,0.1)";
 		      	}
 		    })
 			.attr("cx", xMap)
@@ -181,9 +181,9 @@ function render(params) {
 			    .attr("fill", function(d) { 
 			      	if (d[col["selective"]] == "Selective"
 			      		&& params.colorCircles) {
-						return "rgba(0,0,0,1)"
+						return "rgba(133,118,187,1)"
 			      	} else {
-			      		return "rgba(0,0,0,0.1)"
+			      		return "rgba(133,118,187,0.1)"
 			      	}
 			    })
 			    .attr("r", 6)
