@@ -26,7 +26,7 @@
 				text-align: left;
 			}
 			.reveal p.title {
-				margin: 10px 0;
+				margin: 0 0 10px 0;
 				font-size: 32px;
 				font-family: 'Mukta', sans-serif;
 				color: rgba(0,0,0,0.75);
@@ -37,6 +37,26 @@
 				font-family: 'Mukta', sans-serif;
 				color: rgba(0,0,0,0.75);
 			}
+			#legend2 .country-name {
+			    margin: 0 !important;
+			    font-size: 14px;
+			}
+			#legend2 .key-dot {
+			    display: inline-block;
+			    height: 12px;
+			    margin-right: .5em;
+			    width: 12px;
+			}
+			#legend2{
+			    overflow:hidden;
+			    display: none;
+			}
+			#legend2 .legend2 {
+			    float:left;
+			    margin-right: 1em;
+			}
+			.selective { background: rgba(133,118,187,1); }
+			.not-selective { background: rgba(133,118,187,0.2); }
 		</style>
 	</head>
 	<body>
@@ -44,6 +64,10 @@
 			<div class="slides">
 				<section>
 					<p class="title">Student representation at elite universities: over/under?</p>
+					<div style="position: absolute;" id="legend2">
+						<div class="legend2"> <p class="country-name"><span class="key-dot selective"></span>Selective</p> </div>
+						<div class="legend2"> <p class="country-name"><span class="key-dot not-selective"></span>Not selective</p> </div>
+					</div>
 					<div style="position: relative;">
 					    <div class="fig-container" data-file="enrollment.html"></div> 
 					    <p class="options" style="position: absolute; top:50px; left: 640px; display:none; text-align: right;">
@@ -75,7 +99,7 @@
 			Reveal.initialize({
 				transition: 'none',
 				dependencies: [
-					{ src: 'plugin/reveald3/reveald3.js' }
+					{ src: 'js/reveald3.js' }
 				],
 				reveald3: {
 					keepIframe: true
@@ -84,6 +108,14 @@
 			Reveal.addEventListener( 'fragmentshown', function( event ) {
 				if (+event.fragment.dataset.fragmentIndex > 8) {
 					document.querySelector('.options').style["display"] = "block";
+				}
+				if (+event.fragment.dataset.fragmentIndex >= 1) {
+					document.querySelector('#legend2').style["display"] = "block";
+				}
+			} );
+			Reveal.addEventListener( 'fragmenthidden', function( event ) {
+				if (+event.fragment.dataset.fragmentIndex <= 1) {
+					document.querySelector('#legend2').style["display"] = "none";
 				}
 			} );
 		</script>

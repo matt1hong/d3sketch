@@ -1,7 +1,7 @@
 
 //// COMMON VARIABLES
 // Dimensions
-var margin = {top: 20, right: 20, bottom: 45, left: 70},
+var margin = {top: 30, right: 20, bottom: 45, left: 70},
     width = 960 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 
@@ -102,7 +102,7 @@ function update(params) {
 		      		&& params.colorCircles) {
 					return "rgba(133,118,187,1)";
 		      	} else {
-		      		return "rgba(133,118,187,0.1)";
+		      		return "rgba(133,118,187,0.2)";
 		      	}
 		    })
 			.attr("cx", xMap)
@@ -183,7 +183,7 @@ function render(params) {
 			      		&& params.colorCircles) {
 						return "rgba(133,118,187,1)"
 			      	} else {
-			      		return "rgba(133,118,187,0.1)"
+			      		return "rgba(133,118,187,0.2)"
 			      	}
 			    })
 			    .attr("r", 6)
