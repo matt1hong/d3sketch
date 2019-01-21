@@ -18,7 +18,7 @@
 </head>
 <body>
 <div id="container">
-	<p id="notes">First text</p>
+	<p id="notes">On average, Black students make up 6% of university enrollment nationwide.</p>
 </div>
 <script>
 
@@ -28,9 +28,23 @@ function annotate(text) {
 }
 
 var _transitions = [{
-    transitionForward: function(){ annotate("Second text") },
-    transitionBackward: function(){ annotate("First text") },
+	transitionBackward: function(){ annotate(
+    	"On average, Black students make up 6% of university student enrollment nationwide."
+    ) },
+    transitionForward: function(){ annotate(
+    	"Many schools in this region enroll more Black students than the average."
+    ) },
     index: 0
+},{
+    transitionForward: function(){ annotate(
+    	"However, no selective university in this region enrolls more Black students than the average. We define 'selective' as having an ACT 25th percentile score of at least 27."
+    ) },
+    index: 1
+},{
+    transitionForward: function(){ annotate(
+    	"On the other hand, almost all selective universities enroll more Asian students than the average."
+    ) },
+    index: 2
 }]
 </script>
 </body>

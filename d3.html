@@ -37,7 +37,7 @@ var xValue = function(d) { return +d[col["enrollment"]];},
 
 var yValue = function(d) { return +d[col["endowment"]];},
 	yDomain = [1e3, 3e6],
-    yScale = d3.scaleLog().domain(yDomain).range([height, 0]), // Log scale
+    yScale = d3.scaleLog().clamp(true).domain(yDomain).range([height, 0]), // Log scale
     yMap = function(d) { return yScale(yValue(d));},
     yAxis = d3.axisLeft(yScale)
     	.ticks(4)
@@ -69,27 +69,55 @@ var tooltip = d3.select("body").append("div")
 // RUN THE D3 CODE
 render({
 	group: "black",
+	region: "Great Lakes",
 	circles: false,
 	refX: true,
 	refY: false,
-	pointAt: []
+	pointAt: [],
+	colorCircles: false
 });
 var _transitions = [{   // For Reveal.js
-    transitionForward: function(){ update({
-    	group: "asian",
-		circles: true,
-		refX: true,
-		refY: true,
-		pointAt: []
-    }) },
-    transitionBackward: function(){ update({
+	transitionBackward: function(){ update({
 		group: "black",
+		region: "Great Lakes",
 		circles: false,
 		refX: true,
 		refY: false,
-		pointAt: []
+		pointAt: [],
+		colorCircles: false
 	}) },
+    transitionForward: function(){ update({
+    	group: "black",
+    	region: "Great Lakes",
+		circles: true,
+		refX: true,
+		refY: false,
+		pointAt: [],
+		colorCircles: false
+    }) },
     index: 0
+},{
+    transitionForward: function(){ update({
+    	group: "black",
+    	region: "Great Lakes",
+		circles: true,
+		refX: true,
+		refY: false,
+		pointAt: [],
+		colorCircles: true
+    }) },
+    index: 1
+},{
+    transitionForward: function(){ update({
+    	group: "asian",
+    	region: "Great Lakes",
+		circles: true,
+		refX: true,
+		refY: false,
+		pointAt: [],
+		colorCircles: true
+    }) },
+    index: 2
 }]
 
 
@@ -116,18 +144,29 @@ function update(params) {
 	var group = params.group;
 
 	d3.csv("./" + group + "-enrollment.csv").then(function(data) {
+		// Filter
+		var regionFilter = function(d) { 
+			return d[col["region"]].indexOf(params.region) > -1 };
 
 		var t = d3.transition()
 		      .duration(750)
 		      .ease(d3.easeLinear);
 
 		var stage = svg.selectAll(".dot")
-			.data(data);
+			.data(data.filter(regionFilter));
 
 		stage.exit()
 			.remove();
 
 		stage.transition(t)
+			.attr("fill", function(d) { 
+		      	if (d[col["selective"]] == "Selective"
+		      		&& params.colorCircles) {
+					return "rgba(0,0,0,1)"
+		      	} else {
+		      		return "rgba(0,0,0,0.2)"
+		      	}
+		    })
 			.attr("cx", xMap)
 			.attr("cy", yMap)
 
@@ -163,7 +202,8 @@ function render(params) {
 	d3.csv("./" + group + "-enrollment.csv").then(function(data) {
 
 		// Filter
-		var regionFilter = function(d) { return d[col["region"]] == "Atlantic & Pacific Ocean States" };
+		var regionFilter = function(d) { 
+			return d[col["region"]].indexOf(params.region) > -1 };
 
 
 		// Create axes and ticks
@@ -181,11 +221,13 @@ function render(params) {
 		var circles = svg.selectAll(".dot")
 				.data(data.filter(regionFilter))
 		    .enter().append("circle")
-			    .attr("class", function(d) { 
-			      	if (d[col["selective"]] == "Selective") {
-						return "dot highlighted"
+		    	.attr("class", "dot")
+			    .attr("fill", function(d) { 
+			      	if (d[col["selective"]] == "Selective"
+			      		&& params.colorCircles) {
+						return "rgba(0,0,0,1)"
 			      	} else {
-			      		return "dot"
+			      		return "rgba(0,0,0,0.2)"
 			      	}
 			    })
 			    .attr("r", 6)
