@@ -73,6 +73,7 @@ function toggleShapes (params, transition) {
 
 function update(params) {
 	var group = params.group;
+	var pointAt = params.pointAt;
 
 	d3.csv("./" + group + "-enrollment.csv").then(function(data) {
 		// Filter
@@ -80,7 +81,7 @@ function update(params) {
 			return d[col["region"]].indexOf(params.region) > -1 
 		};
 		var pointAtFilter = function(d) {
-			return params.pointAt.indexOf(d[col["name"]]) > -1
+			return Object.keys(pointAt).indexOf(d[col["name"]]) > -1
 		};
 
 		// Transitions
@@ -109,7 +110,7 @@ function update(params) {
 		
 		// Point out selected circles
 		svg.selectAll(".dotinfo").remove();
-		if (params.pointAt.length > 0) {
+		if (Object.keys(pointAt).length > 0) {
 			svg.selectAll(".dotinfo")
 				.data(data.filter(pointAtFilter))
 			.enter().append("text")
@@ -119,7 +120,11 @@ function update(params) {
 				})
 				.attr("x", xMap)
 				.attr("y", yMap)
-				.attr("transform", "translate(5,-5)")
+				.attr("transform", function(d) {
+					var translation = pointAt[d[col["name"]]];
+					console.log(translation)
+					return "translate("+translation.x+","+translation.y+")"
+				})
 		}
 
 		// Reference lines

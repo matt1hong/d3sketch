@@ -53,7 +53,7 @@ var _transitions = [{
 		circles: true,
 		refX: true,
 		refY: false,
-		pointAt: ["Northwestern University"],
+		pointAt: [],
 		colorCircles: false
     }) },
     index: 0
@@ -98,7 +98,7 @@ var _transitions = [{
 		circles: true,
 		refX: true,
 		refY: false,
-		pointAt: [],
+		pointAt: {"George Washington University":{x:5,y:10}},
 		colorCircles: true
     }) },
     index: 3
@@ -154,7 +154,11 @@ var _transitions = [{
 		circles: true,
 		refX: true,
 		refY: true,
-		pointAt: ["Duke", "Vanderbilt", "Emory"],
+		pointAt: {
+			"Duke University":{x:3,y:-10}, 
+			"Vanderbilt University":{x:8,y:10},
+			"Emory University":{x:6,y:8}
+		},
 		colorCircles: true
     }) },
     index: 7
